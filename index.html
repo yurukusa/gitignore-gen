@@ -3,308 +3,586 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>gitignore Gen — .gitignore Generator</title>
-<meta name="description" content="Generate .gitignore files for any project. 150+ templates from GitHub. Combine languages, frameworks, IDEs. Free.">
-<meta property="og:title" content="gitignore Gen — .gitignore Generator">
-<meta property="og:description" content="Generate .gitignore for any project. 150+ GitHub templates. Free.">
+<title>gitignore-gen — Generate .gitignore files</title>
+<meta name="description" content="Generate comprehensive .gitignore files by selecting languages, frameworks, IDEs, and OS. Based on official GitHub templates. Zero dependencies.">
+<meta property="og:title" content="gitignore-gen — Generate .gitignore files">
+<meta property="og:description" content="Generate .gitignore for any project. Select languages, frameworks, IDEs. Free, offline, zero dependencies.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://yurukusa.github.io/gitignore-gen/">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <link rel="canonical" href="https://yurukusa.github.io/gitignore-gen/">
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "WebApplication", "name": "gitignore Gen", "description": "Generate .gitignore files for any project. 150+ templates from GitHub. Combine languages, frameworks, IDEs.", "url": "https://yurukusa.github.io/gitignore-gen/", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "author": {"@type": "Organization", "name": "yurukusa", "url": "https://github.com/yurukusa"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"gitignore-gen","description":"Generate comprehensive .gitignore files by selecting languages, frameworks, IDEs, and OS.","url":"https://yurukusa.github.io/gitignore-gen/","applicationCategory":"DeveloperApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"author":{"@type":"Organization","name":"yurukusa","url":"https://github.com/yurukusa"}}
 </script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0a;color:#e6e6e6;min-height:100vh}
-.container{max-width:900px;margin:0 auto;padding:24px 16px}
-h1{font-size:1.8rem;text-align:center;margin:32px 0 8px;color:#fff}
-.subtitle{text-align:center;color:#888;margin-bottom:24px;font-size:0.95rem}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#21262d;--border:#30363d;
+  --text:#e6edf3;--text-muted:#8b949e;--accent:#58a6ff;--accent-hover:#79c0ff;
+  --green:#3fb950;--red:#f85149;--orange:#d29922;
+  --radius:6px;--font:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.5;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+button{cursor:pointer;font-family:var(--font)}
 
-.search-section{background:#161616;border:1px solid #222;border-radius:12px;padding:20px;margin-bottom:16px}
-.search-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-.search-row input{flex:1;padding:10px 14px;border-radius:8px;border:1px solid #333;background:#0d0d0d;color:#ddd;font-size:0.9rem;outline:none}
-.search-row input:focus{border-color:#3b82f6}
+/* Header */
+.header{padding:24px 24px 0;text-align:center}
+.header h1{font-size:28px;font-weight:700;margin-bottom:4px}
+.header h1 span{color:var(--accent)}
+.header p{color:var(--text-muted);font-size:14px;margin-bottom:16px}
 
-.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.filter-btn{padding:5px 12px;border-radius:6px;border:1px solid #333;background:#0d0d0d;color:#888;font-size:0.75rem;cursor:pointer;font-weight:600}
-.filter-btn.active{background:#1a2744;color:#4da6ff;border-color:#2a4a7a}
-.filter-btn:hover:not(.active){color:#ccc}
+/* Layout */
+.main{display:flex;gap:20px;padding:20px 24px;flex:1;max-width:1400px;margin:0 auto;width:100%}
+.panel-left{flex:1;min-width:0}
+.panel-right{flex:1;min-width:0;display:flex;flex-direction:column}
 
-.template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;max-height:300px;overflow-y:auto;padding:4px}
-.template-chip{padding:8px 12px;border-radius:8px;border:1px solid #333;background:#0d0d0d;color:#888;font-size:0.78rem;cursor:pointer;text-align:center;transition:all 0.15s}
-.template-chip:hover{border-color:#555;color:#ccc}
-.template-chip.selected{background:#1a2744;color:#4da6ff;border-color:#2a4a7a}
+/* Search */
+.search-wrap{position:relative;margin-bottom:16px}
+.search-wrap input{width:100%;padding:10px 12px 10px 36px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:14px;outline:none}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
 
-.selected-section{margin-bottom:16px}
-.selected-tags{display:flex;gap:6px;flex-wrap:wrap;min-height:36px;align-items:center}
-.selected-tag{display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;background:#1a2744;color:#4da6ff;font-size:0.78rem;font-weight:600;border:1px solid #2a4a7a}
-.selected-tag .remove{cursor:pointer;color:#60a5fa;font-weight:700;margin-left:2px}
-.selected-tag .remove:hover{color:#f87171}
-.empty-hint{color:#555;font-size:0.82rem}
+/* Presets */
+.presets{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.preset-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-muted);font-size:12px;font-weight:500;transition:all .15s}
+.preset-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-.btn-row{display:flex;gap:8px;justify-content:center;margin:16px 0;flex-wrap:wrap}
-.btn{padding:8px 16px;border-radius:8px;border:1px solid #333;background:#161616;color:#888;font-size:0.82rem;cursor:pointer;font-weight:600}
-.btn:hover{border-color:#555;color:#ccc}
-.btn.primary{background:#3b82f6;border-color:#3b82f6;color:#fff}
-.btn.primary:hover{background:#2563eb}
+/* Category */
+.category{margin-bottom:16px}
+.category-title{font-size:13px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.category-title .count{font-size:11px;background:var(--surface2);padding:1px 6px;border-radius:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;font-weight:500;transition:all .15s;user-select:none}
+.chip:hover{border-color:var(--text-muted)}
+.chip.active{border-color:var(--accent);background:rgba(88,166,255,.12);color:var(--accent)}
+.chip.hidden{display:none}
 
-.output-section{background:#161616;border:1px solid #222;border-radius:12px;padding:20px;margin-bottom:16px;display:none}
-.output-section.visible{display:block}
-.output-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.output-header h3{font-size:0.9rem;color:#ccc}
-.output-stats{font-size:0.78rem;color:#888}
-textarea.output{width:100%;height:400px;padding:12px;border-radius:10px;border:1px solid #333;background:#0d0d0d;color:#ddd;font-family:'Fira Code',monospace;font-size:0.78rem;resize:vertical;outline:none;line-height:1.4}
-textarea.output:focus{border-color:#3b82f6}
+/* Preview panel */
+.preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.preview-header h2{font-size:16px;font-weight:600}
+.stats{display:flex;gap:12px;font-size:12px;color:var(--text-muted)}
+.stats span{display:flex;align-items:center;gap:4px}
+.action-btns{display:flex;gap:6px}
+.action-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;font-weight:500;transition:all .15s}
+.action-btn:hover{border-color:var(--accent);color:var(--accent)}
+.action-btn.copied{border-color:var(--green);color:var(--green)}
+.preview-box{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;overflow:auto;min-height:400px}
+.preview-box pre{font-family:var(--mono);font-size:13px;line-height:1.6;white-space:pre;color:var(--text);tab-size:4}
+.preview-box .comment{color:var(--green)}
+.preview-box .empty{color:var(--text-muted);font-style:italic;text-align:center;padding-top:80px}
 
-.custom-section{background:#161616;border:1px solid #222;border-radius:12px;padding:20px;margin-bottom:16px}
-.custom-section h3{font-size:0.9rem;color:#ccc;margin-bottom:8px}
-textarea.custom{width:100%;height:100px;padding:12px;border-radius:10px;border:1px solid #333;background:#0d0d0d;color:#ddd;font-family:'Fira Code',monospace;font-size:0.78rem;resize:vertical;outline:none;line-height:1.4}
-textarea.custom:focus{border-color:#3b82f6}
+/* Clear */
+.clear-wrap{margin-top:8px;text-align:right}
+.clear-btn{padding:4px 10px;font-size:12px;border:none;background:none;color:var(--text-muted);cursor:pointer}
+.clear-btn:hover{color:var(--red)}
 
-.status{text-align:center;font-size:0.82rem;margin:10px 0}
-.status.loading{color:#f59e0b}
-.status.error{color:#ef4444}
+/* Footer */
+.footer{text-align:center;padding:20px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border);margin-top:auto}
+.footer a{color:var(--accent)}
 
-.copied{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:8px 20px;border-radius:8px;font-size:0.85rem;font-weight:600;z-index:100;animation:fadeOut 1.5s forwards}
-@keyframes fadeOut{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:10px 24px;border-radius:var(--radius);font-size:14px;font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:100}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-footer{text-align:center;padding:32px 16px;border-top:1px solid #1a1a1a;margin-top:40px;color:#555;font-size:0.78rem}
-footer a{color:#666;text-decoration:none}
-footer a:hover{color:#999}
-.related a{color:#4da6ff;text-decoration:none;margin:0 8px}
+/* Responsive */
+@media(max-width:768px){
+  .main{flex-direction:column}
+  .header h1{font-size:22px}
+  .preview-box{min-height:300px}
+  .preview-header{flex-direction:column;align-items:flex-start}
+}
 </style>
 </head>
 <body>
-<div class="container">
-<h1>gitignore Gen</h1>
-<p class="subtitle">Generate .gitignore files from 150+ GitHub templates.</p>
 
-<div class="search-section">
-  <div class="search-row">
-    <input type="text" id="searchInput" placeholder="Search templates... (Node, Python, Rust, JetBrains, etc.)" oninput="filterTemplates()">
+<div class="header">
+  <h1><span>gitignore</span>-gen</h1>
+  <p>Select your stack. Get a comprehensive .gitignore. Based on official GitHub templates.</p>
+</div>
+
+<div class="main">
+  <div class="panel-left">
+    <div class="search-wrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M11.5 7a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Zm-.82 4.74a6 6 0 1 1 1.06-1.06l3.04 3.04a.75.75 0 1 1-1.06 1.06l-3.04-3.04Z"/></svg>
+      <input type="text" id="search" placeholder="Search technologies..." autocomplete="off">
+    </div>
+
+    <div class="presets">
+      <button class="preset-btn" data-preset="webapp">Web App (Node + React)</button>
+      <button class="preset-btn" data-preset="pythonml">Python ML</button>
+      <button class="preset-btn" data-preset="fullstack">Full Stack (Node + Python + Docker)</button>
+    </div>
+
+    <div id="categories"></div>
+
+    <div class="clear-wrap">
+      <button class="clear-btn" id="clearAll">Clear all selections</button>
+    </div>
   </div>
-  <div class="filter-row" id="filterRow"></div>
-  <div class="template-grid" id="templateGrid"></div>
-</div>
 
-<div class="selected-section">
-  <div style="font-size:0.82rem;color:#888;margin-bottom:6px;font-weight:600">Selected templates:</div>
-  <div class="selected-tags" id="selectedTags">
-    <span class="empty-hint">Click templates above to add them</span>
+  <div class="panel-right">
+    <div class="preview-header">
+      <h2>.gitignore</h2>
+      <div class="stats">
+        <span id="ruleCount">0 rules</span>
+        <span>·</span>
+        <span id="lineCount">0 lines</span>
+      </div>
+      <div class="action-btns">
+        <button class="action-btn" id="copyBtn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+          Copy
+        </button>
+        <button class="action-btn" id="downloadBtn">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"/><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"/></svg>
+          Download
+        </button>
+      </div>
+    </div>
+    <div class="preview-box">
+      <pre id="preview"><span class="empty">Select technologies to generate .gitignore</span></pre>
+    </div>
   </div>
 </div>
 
-<div class="custom-section">
-  <h3>Custom rules (optional)</h3>
-  <textarea class="custom" id="customRules" placeholder="# Add your own rules here
-.env
-.env.local
-*.log
-dist/
-build/"></textarea>
-</div>
+<div class="toast" id="toast"></div>
 
-<div class="btn-row">
-  <button class="btn primary" onclick="generate()">Generate .gitignore</button>
-  <button class="btn" onclick="copyOutput()">Copy</button>
-  <button class="btn" onclick="downloadOutput()">Download</button>
-  <button class="btn" onclick="clearAll()">Clear</button>
-</div>
-
-<div id="status"></div>
-
-<div class="output-section" id="outputSection">
-  <div class="output-header">
-    <h3>.gitignore</h3>
-    <span class="output-stats" id="outputStats"></span>
-  </div>
-  <textarea class="output" id="outputArea" readonly></textarea>
-</div>
-</div>
-
-<footer>
-  <a href="https://github.com/yurukusa/gitignore-gen">GitHub</a> ·
-  Part of <a href="https://yurukusa.github.io/dev-toolkit/">Dev Toolkit</a>
-  <div class="related" style="margin-top:12px">
-    <strong style="color:#888">Related Tools</strong><br>
-    <a href="https://yurukusa.github.io/git-cheatsheet/">Git Cheatsheet</a>
-    <a href="https://yurukusa.github.io/robots-txt/">Robots.txt</a>
-  </div>
-  <div style="margin-top:12px"><a href="https://yurukusa.github.io/dev-toolkit/" style="color:#666">Dev Toolkit — 101 free tools</a></div>
+<footer class="footer">
+  Built by <a href="https://github.com/yurukusa" target="_blank">yurukusa</a> ·
+  <a href="https://yurukusa.github.io/cc-toolkit/" target="_blank">cc-toolkit</a> ·
+  <a href="https://yurukusa.github.io/dev-toolkit/" target="_blank">dev-toolkit</a>
 </footer>
 
 <script>
-const CATEGORIES={
-  'Languages':['Ada','Agda','Android','AppEngine','AppceleratorTitanium','ArchLinuxPackages','C','C++','CFWheels','CMake','CUDA','CakePHP','ChefCookbook','Clojure','CodeIgniter','CommonLisp','Composer','Concrete5','Coq','CraftCMS','D','DM','Dart','Delphi','Drupal','EPiServer','Eagle','Elisp','Elixir','Elm','Erlang','ExpressionEngine','ExtJs','Fancy','Finale','ForceDotCom','Fortran','FuelPHP','GWT','Go','Godot','Gradle','Grails','Haskell','IGDBNext','Idris','JBoss','Java','Jekyll','Joomla','Julia','KiCad','Kohana','Kotlin','LabVIEW','Laravel','Leiningen','LemonStand','Lilypond','Lithium','Lua','Magento','Maven','Mercury','MetaProgrammingSystem','Nanoc','Nim','Node','OCaml','ObjC','Opa','OpenCart','OracleForms','Packer','Perl','Perl6','Phalcon','PlayFramework','Plone','Prestashop','Processing','PureScript','Python','Qooxdoo','Qt','R','ROS','Racket','Rails','Raku','RhodesRhomobile','Ruby','Rust','SCons','Sass','Scala','Scheme','Scrivener','Sdcc','SeamGen','SketchUp','Smalltalk','Stella','SugarCRM','Swift','Symfony','SymphonyCMS','TeX','Terraform','Textpattern','TurboGears2','TwinCAT3','Typo3','Unity','UnrealEngine','VVVVV','VisualStudio','Waf','WordPress','Xojo','Yeoman','Yii','ZendFramework','Zephir'],
-  'IDE/Editor':['Emacs','JetBrains','Kate','KDevelop4','NetBeans','SublimeText','TextMate','Vim','VisualStudioCode','Xcode'],
-  'OS':['Linux','macOS','Windows'],
-  'Other':['Backup','CVS','Diff','Dropbox','GPG','Images','LibreOffice','Patch','PuTTY','SVN','Tags','VirtualEnv','Vagrant']
+// --- Gitignore rule definitions (comprehensive, based on github/gitignore) ---
+const RULES = {
+  // Languages
+  "Node.js": [
+    "node_modules/", "npm-debug.log*", "yarn-debug.log*", "yarn-error.log*",
+    "lerna-debug.log*", ".pnpm-debug.log*", "pnpm-lock.yaml", "package-lock.json",
+    ".npm", ".eslintcache", ".stylelintcache", ".node_repl_history",
+    "*.tgz", ".yarn-integrity", ".env", ".env.local", ".env.development.local",
+    ".env.test.local", ".env.production.local", "dist/", "build/", "out/",
+    "coverage/", "*.lcov", ".nyc_output/", ".grunt", "bower_components/",
+    "*.pid", "*.seed", "*.pid.lock", "lib-cov/", ".lock-wscript",
+    ".node_modules.cache/", ".parcel-cache/", ".cache/", ".turbo/"
+  ],
+  "Python": [
+    "__pycache__/", "*.py[cod]", "*$py.class", "*.so",
+    "build/", "develop-eggs/", "dist/", "downloads/", "eggs/", ".eggs/",
+    "lib/", "lib64/", "parts/", "sdist/", "var/", "wheels/",
+    "*.egg-info/", ".installed.cfg", "*.egg", "MANIFEST",
+    "*.manifest", "*.spec", "pip-log.txt", "pip-delete-this-directory.txt",
+    "htmlcov/", ".tox/", ".nox/", ".coverage", ".coverage.*",
+    ".cache", "nosetests.xml", "coverage.xml", "*.cover", "*.py,cover",
+    ".hypothesis/", ".pytest_cache/", "pytestdebug.log",
+    "*.mo", "*.pot", "*.log", "local_settings.py", "db.sqlite3", "db.sqlite3-journal",
+    "instance/", ".webassets-cache", ".scrapy", "docs/_build/",
+    ".pybuilder/", "target/", ".ipynb_checkpoints",
+    "profile_default/", "ipython_config.py",
+    "__pypackages__/", "celerybeat-schedule", "celerybeat.pid",
+    "*.sage.py", ".env", ".venv", "env/", "venv/", "ENV/",
+    "env.bak/", "venv.bak/", ".spyderproject", ".spyproject",
+    ".ropeproject", "site/", ".mypy_cache/", ".dmypy.json", "dmypy.json",
+    ".pyre/", ".pytype/", "cython_debug/", ".ruff_cache/"
+  ],
+  "Go": [
+    "*.exe", "*.exe~", "*.dll", "*.so", "*.dylib",
+    "*.test", "*.out", "vendor/", "go.work", "go.work.sum",
+    "coverage.out", "coverage.html", "bin/", "dist/"
+  ],
+  "Rust": [
+    "debug/", "target/", "Cargo.lock",
+    "**/*.rs.bk", "*.pdb", "*.d"
+  ],
+  "Java": [
+    "*.class", "*.log", "*.ctxt", ".mtj.tmp/",
+    "*.jar", "*.war", "*.nar", "*.ear", "*.zip", "*.tar.gz", "*.rar",
+    "hs_err_pid*", "replay_pid*",
+    ".gradle/", "build/", "!gradle/wrapper/gradle-wrapper.jar",
+    "!**/src/main/**/build/", "!**/src/test/**/build/",
+    "bin/", "out/", ".settings/", ".project", ".classpath"
+  ],
+  "C#": [
+    "[Dd]ebug/", "[Rr]elease/", "x64/", "x86/", "[Ww][Ii][Nn]32/",
+    "[Aa][Rr][Mm]/", "[Aa][Rr][Mm]64/", "bld/", "[Bb]in/", "[Oo]bj/",
+    "[Ll]og/", "[Ll]ogs/", "*.user", "*.dbmdl", "*.jfm",
+    "*.rsuser", "*.suo", "*.userosscache", "*.sln.docstates",
+    "*.userprefs", "[Tt]est[Rr]esult*/", "[Dd]ebugPS/", "*.pdb",
+    "*.ilk", "*.meta", "*.obj", "*.iobj", "*.ipdb",
+    "*.pgc", "*.pgd", "*.rsp", "*.sbr", "*.tlb", "*.tli",
+    "*.tmp_proj", "*.vspscc", "*.vssscc", ".builds",
+    "*.dotCover", "*.ncrunch*", "_NCrunch_*",
+    "*.DotSettings.user", "*.resharper", "_ReSharper*/",
+    "*.[Rr]e[Ss]harper", "packages/", "*.nupkg", "*.snupkg",
+    "project.lock.json", "*.nuget.props", "*.nuget.targets",
+    "csx/", "*.build.csdef", "ecf/", "rcf/",
+    "AppPackages/", "BundleArtifacts/", "PublishScripts/",
+    "Generated\\ Files/", "TestResults/", "*.Cache", "ClientBin/",
+    "~$*", "*~", "*.cache"
+  ],
+  "Ruby": [
+    "*.gem", "*.rbc", "/.config", "/coverage/", "/InstalledFiles",
+    "/pkg/", "/spec/reports/", "/spec/examples.txt", "/test/tmp/",
+    "/test/version_tmp/", "/tmp/", ".dat*", ".repl_history",
+    "*.bridgesupport", "build-iPhoneOS/", "build-iPhoneSimulator/",
+    "/.yardoc/", "/_yardoc/", "/doc/", "/rdoc/",
+    "/.bundle/", "/vendor/bundle", "/lib/bundler/man/",
+    ".rvmrc", ".ruby-version", ".ruby-gemset",
+    "Gemfile.lock", ".byebug_history"
+  ],
+  "PHP": [
+    "/vendor/", "node_modules/", "composer.phar", "composer.lock",
+    "*.cache", "*.log", ".env", ".env.backup", ".env.production",
+    ".phpunit.result.cache", "phpunit.xml", "Homestead.json",
+    "Homestead.yaml", "npm-debug.log", "yarn-error.log",
+    "storage/*.key", ".php-cs-fixer.cache", "phpstan.neon",
+    "_ide_helper.php", "_ide_helper_models.php", ".phpstorm.meta.php"
+  ],
+  "Swift": [
+    ".DS_Store", "/.build", "/Packages", "xcuserdata/",
+    "DerivedData/", ".swiftpm/", "*.xcodeproj/*", "!*.xcodeproj/project.pbxproj",
+    "!*.xcodeproj/xcshareddata/", "!*.xcworkspace/contents.xcworkspacedata",
+    "/*.gcno", "**/xcshareddata/WorkspaceSettings.xcsettings",
+    "Package.resolved", "*.playground/*", "!*.playground/Contents.swift",
+    "!*.playground/Sources/", "!*.playground/Resources/",
+    "*.hmap", "*.ipa", "*.dSYM.zip", "*.dSYM", "timeline.xctimeline",
+    "playground.xcworkspace", ".build/"
+  ],
+  "Kotlin": [
+    "*.class", "*.log", "*.ctxt", ".mtj.tmp/",
+    "*.jar", "*.war", "*.nar", "*.ear", "*.zip", "*.tar.gz", "*.rar",
+    "hs_err_pid*", "replay_pid*",
+    ".gradle/", "build/", "!gradle/wrapper/gradle-wrapper.jar",
+    "!**/src/main/**/build/", "!**/src/test/**/build/",
+    ".idea/", "*.iml", "out/", "local.properties"
+  ],
+
+  // Frameworks
+  "React / Next.js": [
+    ".next/", "out/", ".env*.local",
+    "next-env.d.ts", ".vercel/", ".turbo/",
+    "*.tsbuildinfo", ".swc/"
+  ],
+  "Vue / Nuxt": [
+    ".nuxt/", ".output/", "dist/", ".nitro/",
+    ".cache/", "*.local", ".env.local",
+    ".env.*.local"
+  ],
+  "Angular": [
+    "dist/", "tmp/", "out-tsc/", "bazel-out/",
+    "node_modules/", ".angular/", ".sass-cache/",
+    "connect.lock", "libpeerconnection.log",
+    "testem.log", "typings/", "e2e/*.js", "e2e/*.map",
+    "*.ngsummary.json", "*.ngfactory.ts", "*.ngstyle.ts"
+  ],
+  "Django": [
+    "*.log", "local_settings.py", "db.sqlite3", "db.sqlite3-journal",
+    "media/", "staticfiles/", "static_collected/",
+    "*.pot", "*.pyc", "__pycache__/"
+  ],
+  "Flask": [
+    "instance/", ".webassets-cache",
+    "*.pyc", "__pycache__/", ".env",
+    "dist/", "build/", "*.egg-info/"
+  ],
+  "Rails": [
+    "/log/*", "/tmp/*", "!/log/.keep", "!/tmp/.keep",
+    "/storage/*", "!/storage/.keep",
+    "/public/assets/", "/public/packs/", "/public/packs-test/",
+    "/node_modules/", "/yarn-error.log", ".byebug_history",
+    "config/master.key", "config/credentials/*.key",
+    "/db/*.sqlite3", "/db/*.sqlite3-journal"
+  ],
+  "Spring": [
+    "HELP.md", ".gradle/", "build/",
+    "!gradle/wrapper/gradle-wrapper.jar",
+    "!**/src/main/**/build/", "!**/src/test/**/build/",
+    "*.iws", "*.iml", "*.ipr", "out/",
+    ".idea/", "target/", "*.jar", "*.war"
+  ],
+  ".NET": [
+    "[Bb]in/", "[Oo]bj/", "[Dd]ebug/", "[Rr]elease/",
+    "*.user", "*.suo", "*.cache", "*.vspscc", "*.vssscc",
+    "*.DotSettings.user", "packages/", "*.nupkg",
+    "project.lock.json", "TestResults/"
+  ],
+
+  // IDEs
+  "VS Code": [
+    ".vscode/*", "!.vscode/settings.json", "!.vscode/tasks.json",
+    "!.vscode/launch.json", "!.vscode/extensions.json",
+    "!.vscode/*.code-snippets",
+    ".history/", "*.vsix", "*.code-workspace"
+  ],
+  "JetBrains": [
+    ".idea/", "*.iws", "*.iml", "*.ipr",
+    "cmake-build-*/", ".idea/**/workspace.xml",
+    ".idea/**/tasks.xml", ".idea/**/usage.statistics.xml",
+    ".idea/**/dictionaries", ".idea/**/shelf",
+    ".idea/**/aws.xml", ".idea/**/contentModel.xml",
+    ".idea/**/dataSources/", ".idea/**/dataSources.ids",
+    ".idea/**/dataSources.local.xml",
+    ".idea/**/sqlDataSources.xml",
+    ".idea/**/dynamic.xml", ".idea/**/uiDesigner.xml",
+    ".idea/**/dbnavigator.xml", ".idea/**/gradle.xml",
+    ".idea/**/libraries", ".idea/**/mongoExplorer.xml",
+    "*.iml", "out/", ".idea_modules/",
+    "atlassian-ide-plugin.xml", "com_crashlytics_export_strings.xml",
+    "crashlytics.properties", "crashlytics-build.properties",
+    "fabric.properties"
+  ],
+  "Vim": [
+    "[._]*.s[a-v][a-z]", "[._]*.sw[a-p]", "[._]s[a-rt-v][a-z]",
+    "[._]ss[a-gi-z]", "[._]sw[a-p]", "Session.vim", "Sessionx.vim",
+    ".netrwhist", "*~", "tags", "[._]*.un~"
+  ],
+  "Emacs": [
+    "*~", "\\#*\\#", "/.emacs.desktop", "/.emacs.desktop.lock",
+    "*.elc", "auto-save-list", "tramp", ".\\#*",
+    ".org-id-locations", "*_archive", "*_flymake.*",
+    "/eshell/history", "/eshell/lastdir",
+    "/elpa/", "*.rel", "/auto/", ".cask/",
+    "dist/", "flycheck_*.el", ".projectile",
+    ".dir-locals.el", "network-security.data"
+  ],
+  "Sublime": [
+    "*.tmlanguage.cache", "*.tmPreferences.cache",
+    "*.stTheme.cache", "*.sublime-workspace",
+    "*.sublime-project", "sftp-config.json", "sftp-config-alt*.json",
+    "Package Control.last-run", "Package Control.ca-list",
+    "Package Control.ca-bundle", "Package Control.system-ca-bundle",
+    "Package Control.cache/", "Package Control.ca-certs/",
+    "Package Control.merged-ca-bundle",
+    "Package Control.user-ca-bundle", "oscrypto-ca-bundle.crt",
+    "bh_unicode_properties.cache", "GitHub.sublime-settings"
+  ],
+
+  // OS
+  "macOS": [
+    ".DS_Store", ".AppleDouble", ".LSOverride",
+    "Icon\\r", "._*", ".DocumentRevisions-V100",
+    ".fseventsd", ".Spotlight-V100", ".TemporaryItems",
+    ".Trashes", ".VolumeIcon.icns", ".com.apple.timemachine.donotpresent",
+    ".AppleDB", ".AppleDesktop", "Network Trash Folder",
+    "Temporary Items", ".apdisk"
+  ],
+  "Windows": [
+    "Thumbs.db", "Thumbs.db:encryptable", "ehthumbs.db",
+    "ehthumbs_vista.db", "*.stackdump", "[Dd]esktop.ini",
+    "$RECYCLE.BIN/", "*.cab", "*.msi", "*.msix", "*.msm", "*.msp",
+    "*.lnk"
+  ],
+  "Linux": [
+    "*~", ".fuse_hidden*", ".directory", ".Trash-*",
+    ".nfs*"
+  ],
+
+  // Extras
+  "Docker": [
+    "docker-compose.override.yml", ".docker/",
+    "*.env", "!docker-compose.yml", "!Dockerfile"
+  ],
+  "Terraform": [
+    ".terraform/", "*.tfstate", "*.tfstate.*",
+    "crash.log", "crash.*.log", "*.tfvars",
+    "*.tfvars.json", "override.tf", "override.tf.json",
+    "*_override.tf", "*_override.tf.json",
+    ".terraformrc", "terraform.rc", ".terraform.lock.hcl"
+  ],
+  "env files": [
+    ".env", ".env.local", ".env.development", ".env.test",
+    ".env.production", ".env.staging", ".env.*",
+    "!.env.example", "!.env.template"
+  ],
+  "Logs": [
+    "logs/", "*.log", "npm-debug.log*", "yarn-debug.log*",
+    "yarn-error.log*", "pnpm-debug.log*", "lerna-debug.log*"
+  ],
+  "Coverage": [
+    "coverage/", "*.lcov", ".nyc_output/", "htmlcov/",
+    ".coverage", ".coverage.*", "coverage.xml",
+    "nosetests.xml", "*.cover", "*.py,cover"
+  ]
 };
 
-let allTemplates=[];
-let selected=new Set();
-let templateCache={};
-let activeFilter='all';
+// Category grouping
+const CATEGORIES = [
+  { name: "Languages", items: ["Node.js","Python","Go","Rust","Java","C#","Ruby","PHP","Swift","Kotlin"] },
+  { name: "Frameworks", items: ["React / Next.js","Vue / Nuxt","Angular","Django","Flask","Rails","Spring",".NET"] },
+  { name: "IDEs", items: ["VS Code","JetBrains","Vim","Emacs","Sublime"] },
+  { name: "OS", items: ["macOS","Windows","Linux"] },
+  { name: "Extras", items: ["Docker","Terraform","env files","Logs","Coverage"] }
+];
 
-function init(){
-  allTemplates=Object.values(CATEGORIES).flat().sort();
-  renderFilters();
-  renderTemplates(allTemplates);
-}
+const PRESETS = {
+  webapp: ["Node.js", "React / Next.js", "VS Code", "macOS", "env files", "Coverage"],
+  pythonml: ["Python", "VS Code", "JetBrains", "macOS", "Linux", "env files", "Coverage", "Logs"],
+  fullstack: ["Node.js", "Python", "React / Next.js", "Docker", "VS Code", "macOS", "Linux", "env files", "Coverage", "Logs"]
+};
 
-function renderFilters(){
-  let html='<span class="filter-btn'+(activeFilter==='all'?' active':'')+'" onclick="setFilter(\'all\')">All ('+allTemplates.length+')</span>';
-  Object.keys(CATEGORIES).forEach(cat=>{
-    html+=`<span class="filter-btn${activeFilter===cat?' active':''}" onclick="setFilter('${cat}')">${cat} (${CATEGORIES[cat].length})</span>`;
+// State
+const selected = new Set();
+
+// Render categories
+function renderCategories() {
+  const container = document.getElementById("categories");
+  container.innerHTML = CATEGORIES.map(cat => `
+    <div class="category">
+      <div class="category-title">${cat.name} <span class="count">${cat.items.length}</span></div>
+      <div class="chips">
+        ${cat.items.map(item => `<button class="chip" data-tech="${item}">${item}</button>`).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  container.addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    const tech = chip.dataset.tech;
+    if (selected.has(tech)) { selected.delete(tech); chip.classList.remove("active"); }
+    else { selected.add(tech); chip.classList.add("active"); }
+    generate();
   });
-  document.getElementById('filterRow').innerHTML=html;
 }
 
-function setFilter(f){
-  activeFilter=f;
-  renderFilters();
-  filterTemplates();
-}
-
-function filterTemplates(){
-  const query=document.getElementById('searchInput').value.toLowerCase();
-  let pool=activeFilter==='all'?allTemplates:(CATEGORIES[activeFilter]||[]);
-  if(query){
-    pool=pool.filter(t=>t.toLowerCase().includes(query));
-  }
-  renderTemplates(pool);
-}
-
-function renderTemplates(list){
-  document.getElementById('templateGrid').innerHTML=list.map(t=>
-    `<div class="template-chip${selected.has(t)?' selected':''}" onclick="toggleTemplate('${t}')">${t}</div>`
-  ).join('')||'<div style="color:#555;padding:12px">No templates match your search.</div>';
-}
-
-function toggleTemplate(name){
-  if(selected.has(name)) selected.delete(name);
-  else selected.add(name);
-  filterTemplates();
-  renderSelected();
-}
-
-function renderSelected(){
-  const tags=document.getElementById('selectedTags');
-  if(selected.size===0){
-    tags.innerHTML='<span class="empty-hint">Click templates above to add them</span>';
-  }else{
-    tags.innerHTML=[...selected].map(t=>
-      `<span class="selected-tag">${t}<span class="remove" onclick="event.stopPropagation();toggleTemplate('${t}')">×</span></span>`
-    ).join('');
-  }
-}
-
-async function fetchTemplate(name){
-  if(templateCache[name]) return templateCache[name];
-  const url=`https://raw.githubusercontent.com/github/gitignore/main/${name}.gitignore`;
-  try{
-    const resp=await fetch(url);
-    if(!resp.ok){
-      // Try Global/ subdirectory
-      const resp2=await fetch(`https://raw.githubusercontent.com/github/gitignore/main/Global/${name}.gitignore`);
-      if(!resp2.ok) return `# ${name} template not found\n`;
-      const text=await resp2.text();
-      templateCache[name]=text;
-      return text;
-    }
-    const text=await resp.text();
-    templateCache[name]=text;
-    return text;
-  }catch(e){
-    return `# Failed to fetch ${name}: ${e.message}\n`;
-  }
-}
-
-async function generate(){
-  if(selected.size===0&&!document.getElementById('customRules').value.trim()){
-    setStatus('Select at least one template or add custom rules','error');
+// Generate .gitignore
+function generate() {
+  const preview = document.getElementById("preview");
+  if (selected.size === 0) {
+    preview.innerHTML = '<span class="empty">Select technologies to generate .gitignore</span>';
+    document.getElementById("ruleCount").textContent = "0 rules";
+    document.getElementById("lineCount").textContent = "0 lines";
     return;
   }
 
-  setStatus('Fetching templates...','loading');
+  const sections = [];
+  const seenRules = new Set();
+  let ruleCount = 0;
 
-  const parts=[];
-  parts.push('# Generated by gitignore Gen');
-  parts.push('# https://yurukusa.github.io/gitignore-gen/');
-  parts.push(`# Templates: ${[...selected].join(', ')||'(custom only)'}`);
-  parts.push('');
-
-  for(const name of [...selected].sort()){
-    const content=await fetchTemplate(name);
-    parts.push(`### ${name} ###`);
-    parts.push(content.trim());
-    parts.push('');
+  for (const tech of selected) {
+    const rules = RULES[tech];
+    if (!rules) continue;
+    const uniqueRules = [];
+    for (const rule of rules) {
+      if (!seenRules.has(rule)) {
+        seenRules.add(rule);
+        uniqueRules.push(rule);
+        ruleCount++;
+      }
+    }
+    if (uniqueRules.length > 0) {
+      sections.push({ name: tech, rules: uniqueRules });
+    }
   }
 
-  const custom=document.getElementById('customRules').value.trim();
-  if(custom){
-    parts.push('### Custom ###');
-    parts.push(custom);
-    parts.push('');
+  const header = "# Generated by gitignore-gen\n# https://yurukusa.github.io/gitignore-gen/\n# " + [...selected].join(", ") + "\n";
+  const body = sections.map(s =>
+    `\n# ${s.name}\n` + s.rules.join("\n")
+  ).join("\n");
+
+  const output = header + body + "\n";
+  const lines = output.split("\n").length;
+
+  // Render with syntax highlighting for comments
+  const highlighted = output.split("\n").map(line =>
+    line.startsWith("#") ? `<span class="comment">${escapeHtml(line)}</span>` : escapeHtml(line)
+  ).join("\n");
+
+  preview.innerHTML = highlighted;
+  document.getElementById("ruleCount").textContent = `${ruleCount} rules`;
+  document.getElementById("lineCount").textContent = `${lines} lines`;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function getOutput() {
+  if (selected.size === 0) return "";
+  const seenRules = new Set();
+  const sections = [];
+  for (const tech of selected) {
+    const rules = RULES[tech];
+    if (!rules) continue;
+    const uniqueRules = rules.filter(r => { if (seenRules.has(r)) return false; seenRules.add(r); return true; });
+    if (uniqueRules.length > 0) sections.push({ name: tech, rules: uniqueRules });
   }
-
-  const output=parts.join('\n');
-  const lines=output.split('\n').length;
-  const rules=output.split('\n').filter(l=>l.trim()&&!l.startsWith('#')).length;
-
-  document.getElementById('outputArea').value=output;
-  document.getElementById('outputStats').textContent=`${lines} lines · ${rules} rules · ${selected.size} templates`;
-  document.getElementById('outputSection').classList.add('visible');
-  setStatus('');
+  const header = "# Generated by gitignore-gen\n# https://yurukusa.github.io/gitignore-gen/\n# " + [...selected].join(", ") + "\n";
+  return header + sections.map(s => `\n# ${s.name}\n` + s.rules.join("\n")).join("\n") + "\n";
 }
 
-function copyOutput(){
-  const text=document.getElementById('outputArea').value;
-  if(!text){setStatus('Generate first','error');return}
-  navigator.clipboard.writeText(text);
-  toast('Copied!');
-}
+// Copy
+document.getElementById("copyBtn").addEventListener("click", () => {
+  const text = getOutput();
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast("Copied to clipboard!");
+    const btn = document.getElementById("copyBtn");
+    btn.classList.add("copied");
+    setTimeout(() => btn.classList.remove("copied"), 1500);
+  });
+});
 
-function downloadOutput(){
-  const text=document.getElementById('outputArea').value;
-  if(!text){setStatus('Generate first','error');return}
-  const blob=new Blob([text],{type:'text/plain'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='.gitignore';
+// Download
+document.getElementById("downloadBtn").addEventListener("click", () => {
+  const text = getOutput();
+  if (!text) return;
+  const blob = new Blob([text], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = ".gitignore";
   a.click();
   URL.revokeObjectURL(a.href);
-  toast('Downloaded!');
+  showToast("Downloaded .gitignore");
+});
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2000);
 }
 
-function clearAll(){
+// Search
+document.getElementById("search").addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll(".chip").forEach(chip => {
+    chip.classList.toggle("hidden", q && !chip.dataset.tech.toLowerCase().includes(q));
+  });
+  document.querySelectorAll(".category").forEach(cat => {
+    const visible = cat.querySelectorAll(".chip:not(.hidden)").length;
+    cat.style.display = visible === 0 && q ? "none" : "";
+  });
+});
+
+// Presets
+document.querySelectorAll(".preset-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    selected.clear();
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    const items = PRESETS[btn.dataset.preset];
+    items.forEach(tech => {
+      selected.add(tech);
+      const chip = document.querySelector(`.chip[data-tech="${tech}"]`);
+      if (chip) chip.classList.add("active");
+    });
+    generate();
+  });
+});
+
+// Clear
+document.getElementById("clearAll").addEventListener("click", () => {
   selected.clear();
-  document.getElementById('customRules').value='';
-  document.getElementById('outputArea').value='';
-  document.getElementById('outputSection').classList.remove('visible');
-  document.getElementById('searchInput').value='';
-  activeFilter='all';
-  renderFilters();
-  filterTemplates();
-  renderSelected();
-  setStatus('');
-}
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  generate();
+});
 
-function setStatus(msg,type){
-  const el=document.getElementById('status');
-  el.textContent=msg;
-  el.className='status'+(type?' '+type:'');
-}
-
-function toast(msg){
-  const el=document.createElement('div');
-  el.className='copied';el.textContent=msg;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),1600);
-}
-
-init();
+// Init
+renderCategories();
 </script>
 </body>
 </html>
